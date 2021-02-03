@@ -1,0 +1,236 @@
+﻿@page "/"
+@namespace INStudio.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+
+@if (Request.Path.StartsWithSegments("/Administration") == true)
+{
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Пейком</title>
+        <base href="~/" />
+        <!-- Tell the browser to be responsive to screen width -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+        <!-- Ionicons -->
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+        <!-- Tempusdominus Bbootstrap 4 -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+        <!-- iCheck -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+        <!-- JQVMap -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/jqvmap/jqvmap.min.css">
+        <!-- Theme style -->
+        <link rel="stylesheet" href="/AdminLTE/dist/css/adminlte.min.css">
+        <!-- overlayScrollbars -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+        <!-- Daterange picker -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+        <!-- summernote -->
+        <link rel="stylesheet" href="/AdminLTE/plugins/summernote/summernote-bs4.css">
+        <!-- Google Font: Source Sans Pro -->
+        <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+
+
+        @*<script src='https://cdn.tiny.cloud/1/q4zy28j3e92k6iif9ity05wj3v9dgez8u4gzpih50ubim5rj/tinymce/5/tinymce.min.js' referrerpolicy="origin">*@
+
+        @*<script src="/js/tinymce/tinymce.min.js"></script>
+            <script src="site.js"></script>*@
+
+
+    </head>
+
+
+
+
+
+    <body class="hold-transition sidebar-mini layout-fixed">
+        <app>
+            <component type="typeof(App)" render-mode="ServerPrerendered" />
+        </app>
+
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                An error has occurred. This application may no longer respond until reloaded.
+            </environment>
+            <environment include="Development">
+                An unhandled exception has occurred. See browser dev tools for details.
+            </environment>
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+
+
+
+
+
+
+
+        <!-- jQuery -->
+        <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
+        <!-- jQuery UI 1.11.4 -->
+        <script src="/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+            $.widget.bridge('uibutton', $.ui.button)
+        </script>
+        <!-- Bootstrap 4 -->
+        <script src="/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- ChartJS -->
+        <script src="/AdminLTE/plugins/chart.js/Chart.min.js"></script>
+        <!-- Sparkline -->
+        <script src="/AdminLTE/plugins/sparklines/sparkline.js"></script>
+        <!-- JQVMap -->
+        <script src="/AdminLTE/plugins/jqvmap/jquery.vmap.min.js"></script>
+        <script src="/AdminLTE/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="/AdminLTE/plugins/jquery-knob/jquery.knob.min.js"></script>
+        <!-- daterangepicker -->
+        <script src="/AdminLTE/plugins/moment/moment.min.js"></script>
+        <script src="/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
+        <!-- Tempusdominus Bootstrap 4 -->
+        <script src="/AdminLTE/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+        <!-- Summernote -->
+        <script src="/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+        <!-- overlayScrollbars -->
+        <script src="/AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="/AdminLTE/dist/js/adminlte.js"></script>
+        <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+        <script src="/AdminLTE/dist/js/pages/dashboard.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="/AdminLTE/dist/js/demo.js"></script>
+    </body>
+</html>
+
+
+
+
+
+}
+else
+{
+
+
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Phozogy Template">
+    <meta name="keywords" content="Phozogy, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Phozogy | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Quantico:400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="Front/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="Front/css/style.css" type="text/css">
+</head>
+
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Header Section Begin -->
+    
+
+
+
+    <app>
+
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+    </app>
+
+
+
+
+
+
+    
+    <!-- Js Plugins -->
+    <script src="Front/js/jquery-3.3.1.min.js"></script>
+    <script src="Front/js/bootstrap.min.js"></script>
+    <script src="Front/js/jquery.magnific-popup.min.js"></script>
+    <script src="Front/js/isotope.pkgd.min.js"></script>
+    <script src="Front/js/masonry.pkgd.min.js"></script>
+    <script src="Front/js/jquery.slicknav.js"></script>
+    <script src="Front/js/owl.carousel.min.js"></script>
+    <script src="Front/js/main.js"></script>
+</body>
+
+</html>
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>INStudio</title>
+        <base href="~/" />
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+        <link href="css/site.css" rel="stylesheet" />
+        <link href="INStudio.styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <component type="typeof(App)" render-mode="ServerPrerendered" />
+
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                An error has occurred. This application may no longer respond until reloaded.
+            </environment>
+            <environment include="Development">
+                An unhandled exception has occurred. See browser dev tools for details.
+            </environment>
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+
+        <script src="_framework/blazor.server.js"></script>
+    </body>
+    </html>*@
