@@ -20,7 +20,7 @@ namespace INStudio.Services
             try
             {
                 this.db.BlogPosts.Add(postToAdd);
-
+                this.db.SaveChanges();
             }
             catch(Exception e)
             {
@@ -38,6 +38,7 @@ namespace INStudio.Services
             {
                 BlogPost bpToDelete = this.db.BlogPosts.FirstOrDefault(x => x.Id == id);
                 PostCategory[] pcToDelete = this.db.PostCategories.Where(x => x.BlogPostId == id).ToArray();
+                this.db.SaveChanges();
             }
             catch(Exception e)
             {
@@ -58,6 +59,8 @@ namespace INStudio.Services
                 bpToEdit.GalleryId = postCorrected.GalleryId;
                 bpToEdit.PostImage = postCorrected.PostImage;
                 bpToEdit.DateEdited = DateTime.Now;
+
+                this.db.SaveChanges();
                 
             }catch(Exception e){
                 Console.WriteLine(e.Message);
@@ -76,7 +79,7 @@ namespace INStudio.Services
             }
             catch(Exception e)
             {
-                Console.WriteLine();
+                Console.WriteLine(e.Message);
             }
             return listToReturn;
         }
