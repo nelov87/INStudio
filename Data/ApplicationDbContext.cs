@@ -21,6 +21,7 @@ namespace INStudio.Data
         public DbSet<MediaType> MediaTypes { get; set; }
         public DbSet<PostCategory> PostCategories { get; set; }
         public DbSet<INServices> INServices { get; set; }
+        public DbSet<Log> Logs { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Skils> Skils { get; set; }
         
