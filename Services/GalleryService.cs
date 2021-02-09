@@ -34,7 +34,20 @@ namespace INStudio.Services
 
         public bool DeleteGallery(string id)
         {
-            throw new System.NotImplementedException();
+            bool operationOk = true;
+
+            try{
+                Gallery gallery = this.db.Gallerys.FirstOrDefault(g => g.Id == id);
+                this.db.Gallerys.Remove(gallery);
+                this.db.SaveChanges();
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                operationOk = false;
+            }
+
+            return operationOk;
         }
 
         public bool EditGallery(Gallery gallery, string id)
@@ -46,6 +59,7 @@ namespace INStudio.Services
                 galeryToEdit.Title = gallery.Title;
                 galeryToEdit.Description = gallery.Description;
                 //galeryToEdit.GalleryINMedias
+                this.db.SaveChanges();
 
 
             }catch(Exception e)
