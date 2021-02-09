@@ -20,7 +20,7 @@ namespace INStudio.Data
         public DbSet<INMediaCategory> INMediaCategories { get; set; }
         public DbSet<MediaType> MediaTypes { get; set; }
         public DbSet<PostCategory> PostCategories { get; set; }
-        public DbSet<Services> Services { get; set; }
+        public DbSet<INServices> INServices { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Skils> Skils { get; set; }
         
