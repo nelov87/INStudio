@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace INStudio.Data
 {
-    public class Services
+    public class INServices
     {
         [Key]
         public string Id { get; set; }
@@ -22,7 +22,7 @@ namespace INStudio.Data
         
         public string Link { get; set; }
 
-        public Services()
+        public INServices()
         {
             this.Id = Guid.NewGuid().ToString();
             this.Image = new INMedia();
