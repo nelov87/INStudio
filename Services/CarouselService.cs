@@ -25,6 +25,8 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                operationOk = false;
+                this.db.SaveChanges();
             }
 
             return operationOk;
@@ -42,6 +44,8 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
+                operationOk = false;
             }
             return operationOk;
         }
@@ -62,6 +66,8 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
+                operationOk = false;
             }
             return operationOk;
         }
@@ -76,6 +82,7 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
             }
 
             return carouselList;
@@ -91,6 +98,7 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
             }
             return carousel;
         }
