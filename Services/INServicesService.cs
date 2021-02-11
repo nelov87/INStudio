@@ -6,7 +6,7 @@ using INStudio.Data;
 
 namespace INStudio.Services
 {
-    public class INServicesService : IINServiceService
+    public class INServicesService : IINServicesService
     {
         public ApplicationDbContext db { get; set; }
 
