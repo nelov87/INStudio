@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace INStudio.Services
 {
-    public interface IINServiceService
+    public interface IINServicesService
     {
          bool AddINService(INServices service);
          bool EditINService(INServices newServices, string id);

@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using INStudio.Services;
 
 namespace INStudio
 {
@@ -41,6 +42,21 @@ namespace INStudio
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
+
+            //==========================Custom Services=========================
+            services.AddTransient<ILogService, LogService>();
+            services.AddTransient<ISettingsServicecs, SettingsServicecs>();
+            services.AddTransient<ISkilsService, SkilsService>();
+            services.AddTransient<IMediaTypeService, MediaTypeService>();
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<ICarouselService, CarouselService>();
+            services.AddTransient<ICommentService, CommentService>();
+            services.AddTransient<IGalleryService, GalleryService>();
+            services.AddTransient<IINMediaService, INMediaService>();
+            services.AddTransient<IINServicesService, INServicesService>();
+
+
+
             
         }
 
