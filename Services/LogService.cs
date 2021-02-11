@@ -26,10 +26,12 @@ namespace INStudio.Services
 
             try{
                 logsList = this.db.Logs.Where(x => x.Type == type).ToHashSet();
+                
             }
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
             }
 
             return logsList;
@@ -45,6 +47,7 @@ namespace INStudio.Services
             catch(Exception e)
             {
                 this.db.Logs.Add(new Log(e.Message, LogTypes.Error.ToString()));
+                this.db.SaveChanges();
             }
 
             return logsList;

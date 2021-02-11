@@ -6,7 +6,7 @@ using INStudio.Data;
 
 namespace INStudio.Services
 {
-    public class SkilsServiceb : ISkilsService
+    public class SkilsService : ISkilsService
     {
         public ApplicationDbContext db { get; set; }
         public ILogService logService { get; set; }
@@ -28,27 +28,80 @@ namespace INStudio.Services
             catch (Exception e)
             {
                 this.logService.AddLog(e.Message, LogTypes.Error.ToString());
+                operationOk = false;
             }
+
+            return operationOk;
         }
 
         public bool DeleteSkill(string id)
         {
-            throw new System.NotImplementedException();
+            bool operationOk = true;
+
+            try
+            {
+                Skils skil = this.db.Skils.FirstOrDefault(x => x.Id == id);
+                this.db.Skils.Remove(skil);
+                this.db.SaveChanges();
+            }
+            catch (System.Exception e)
+            {
+                
+                this.logService.AddLog(e.Message, LogTypes.Error.ToString());
+                operationOk = false;
+            }
+            return operationOk;
         }
 
         public bool EditSkill(Skils newSkill, string id)
         {
-            throw new System.NotImplementedException();
+            bool operationOk = true;
+
+            try
+            {
+                Skils oldSkil = this.db.Skils.FirstOrDefault(x => x.Id == id);
+                oldSkil.Content = newSkill.Content;
+                oldSkil.Image = newSkill.Image;
+                oldSkil.ImageId = newSkill.ImageId;
+                oldSkil.Title = newSkill.Title;
+            }
+            catch (System.Exception e)
+            {
+                this.logService.AddLog(e.Message, LogTypes.Error.ToString());
+                operationOk = false;
+            }
+            return operationOk;
         }
 
         public ICollection<Skils> GetAllSkils()
         {
-            throw new System.NotImplementedException();
+            HashSet<Skils> sklisList = new HashSet<Skils>();
+
+            try
+            {
+                sklisList = this.db.Skils.ToHashSet();
+            }
+            catch(Exception e)
+            {
+                this.logService.AddLog(e.Message, LogTypes.Error.ToString());
+            }
+            return sklisList;
         }
 
         public Skils GetSkill(string id)
         {
-            throw new System.NotImplementedException();
+            Skils skil = new Skils();
+
+            try
+            {
+                skil = this.db.Skils.FirstOrDefault(x => x.Id == id);
+
+            }
+            catch(Exception e)
+            {
+                this.logService.AddLog(e.Message, LogTypes.Error.ToString());
+            }
+            return skil;
         }
     }
 }
