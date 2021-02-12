@@ -123,5 +123,25 @@ namespace INStudio.Services
                 return false;
             }
         }
+
+        public bool CommentsControl(string postId, bool isActive)
+        {
+            bool operationOk = true;
+
+            try{
+                BlogPost bpToEdit = this.db.BlogPosts.
+                FirstOrDefault(x => x.Id == postId);
+                
+                bpToEdit.ComentsIsActive = isActive;
+
+                this.db.SaveChanges();
+                
+            }catch(Exception e){
+                Console.WriteLine(e.Message);
+                operationOk = false;
+            }
+
+            return operationOk;
+        }
     }
 }

@@ -12,5 +12,6 @@ namespace INStudio.Services
          ICollection<BlogPost> GetAllPosts();
          ICollection<BlogPost> GetPostsByCategory(string categoryId);
          bool PostExist(string id);
+         bool CommentsControl(string postId, bool isActive);
     }
 }

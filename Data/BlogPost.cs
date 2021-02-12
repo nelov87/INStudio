@@ -27,6 +27,7 @@ namespace INStudio.Data
         public string GalleryId { get; set; }
         public Gallery Gallery { get; set; }
         public ICollection<Comment> Comments { get; set; }
+        public bool ComentsIsActive { get; set; }
 
         public BlogPost()
         {
@@ -35,6 +36,7 @@ namespace INStudio.Data
             this.PostCategories = new HashSet<PostCategory>();
             this.Active = true;
             this.Comments = new HashSet<Comment>();
+            this.ComentsIsActive = true;
         }
     }
 }
