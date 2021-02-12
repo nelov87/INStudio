@@ -24,6 +24,7 @@ namespace INStudio.Data
         public DbSet<Log> Logs { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Skils> Skils { get; set; }
+        public DbSet<Statistic> Statistics { get; set; }
         
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
