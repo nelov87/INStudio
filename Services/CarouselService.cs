@@ -10,17 +10,17 @@ namespace INStudio.Services
     {
         public ApplicationDbContext db { get; set; }
 
-        public CarouselService(ApplicationDbContext db)
+        public CarouselService(ApplicationDbContext dbb)
         {
-            this.db = db;
+            this.db = dbb;
         }
         public bool AddCarousel(Carousel carousel)
         {
             bool operationOk = true;
-
-            try{
-                this.db.Carousels.Add(carousel);
+            this.db.Carousels.Add(carousel);
                 this.db.SaveChanges();
+            try{
+                
             }
             catch(Exception e)
             {

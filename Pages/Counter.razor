@@ -1,4 +1,8 @@
 ﻿@page "/counter"
+@inject ICarouselService carouselService
+@inject ApplicationDbContext db
+@using INStudio.Data
+@using INStudio.Services
 
 <h1>Counter</h1>
 
@@ -6,11 +10,14 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+
 @code {
     private int currentCount = 0;
-
+private Carousel carouselModel = new Carousel();
     private void IncrementCount()
     {
         currentCount++;
     }
+
+    
 }

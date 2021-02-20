@@ -54,7 +54,7 @@ namespace INStudio
             services.AddTransient<IGalleryService, GalleryService>();
             services.AddTransient<IINMediaService, INMediaService>();
             services.AddTransient<IINServicesService, INServicesService>();
-
+            
 
 
             

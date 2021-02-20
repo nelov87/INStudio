@@ -73,7 +73,7 @@
 
 
 
-
+        <script src="_framework/blazor.server.js"></script>
         <!-- jQuery -->
         <script src="/AdminLTE/plugins/jquery/jquery.min.js"></script>
         <!-- jQuery UI 1.11.4 -->
@@ -114,6 +114,59 @@
 
 
 
+
+}
+else if(Request.Path.StartsWithSegments("/Identity") == true)
+{
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Пейком</title>
+        <base href="~/" />
+        <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+        <link href="css/site.css" rel="stylesheet" />
+
+
+        @*<script src='https://cdn.tiny.cloud/1/q4zy28j3e92k6iif9ity05wj3v9dgez8u4gzpih50ubim5rj/tinymce/5/tinymce.min.js' referrerpolicy="origin">*@
+
+        <script src="/js/tinymce/tinymce.min.js"></script>
+        <script src="site.js"></script>
+
+        @*<script>
+            tinymce.init({
+                selector: '#editor'
+            });
+        </script>*@
+    </head>
+
+
+
+
+
+    <body>
+        <app>
+            <component type="typeof(App)" render-mode="ServerPrerendered" />
+        </app>
+
+        <div id="blazor-error-ui">
+            <environment include="Staging,Production">
+                An error has occurred. This application may no longer respond until reloaded.
+            </environment>
+            <environment include="Development">
+                An unhandled exception has occurred. See browser dev tools for details.
+            </environment>
+            <a href="" class="reload">Reload</a>
+            <a class="dismiss">🗙</a>
+        </div>
+
+        <script src="js/jquery.min.js"></script>
+
+        <script src="_framework/blazor.server.js"></script>
+    </body>
+</html>
 
 }
 else
@@ -177,6 +230,7 @@ else
     <script src="Front/js/jquery.slicknav.js"></script>
     <script src="Front/js/owl.carousel.min.js"></script>
     <script src="Front/js/main.js"></script>
+    <script src="_framework/blazor.server.js"></script>
 </body>
 
 </html>

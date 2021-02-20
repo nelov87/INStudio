@@ -1,0 +1,149 @@
+@page "/Administration/Corousel/Add"
+@inject ICarouselService carouselService
+@inject ApplicationDbContext db
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+
+
+
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>General Form</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">General Form</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+
+    <section class="content">
+      <div class="row">
+
+          <div class="col-md-10">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Quick Example</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <EditForm Model="@carouselModel" OnInvalidSubmit="@HandelValidSubmit">
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Title</label>
+                    <InputText class="form-control" id="Title" @bind-Value="carouselModel.Title"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Description</label>
+                    <InputText class="form-control" id="Description" @bind-Value="carouselModel.Description"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Number</label>
+                    <InputNumber class="form-control" id="Number" @bind-Value="carouselModel.Number"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputPassword1">Link</label>
+                    <InputText class="form-control" id="Link" @bind-Value="carouselModel.Link"/>
+                  </div>
+                  
+                  
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary">Submit</button> <span>@isOk</span>
+                </div>
+              </EditForm>
+              
+            </div>
+            <!-- /.card -->
+
+            
+            
+
+          </div>
+          <!-- /div col-6 /.col (left) -->
+
+
+          <div class="col-md-2">
+              <!-- general form elements disabled -->
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">General Elements</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                
+                @* <form role="form">
+                  
+                  
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <!-- checkbox -->
+                      <div class="form-group">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox">
+                          <label class="form-check-label">Checkbox</label>
+                        </div>
+                        
+                        
+                      </div>
+                    </div> 
+                    
+                  </div>
+
+                  
+
+                  
+                </form> *@
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+      </div>
+    </section>
+    <!-- /.content -->
+
+
+</div>
+
+
+
+
+
+@code
+{
+private Carousel carouselModel = new Carousel();
+private bool isOk = false;
+
+protected override void OnInitialized()
+        {
+            base.OnInitialized();
+
+            
+        }
+
+        
+
+public void HandelValidSubmit()
+{
+  isOk = this.carouselService.AddCarousel(carouselModel);
+  isOk = true;
+  //this.db.SaveChanges();
+  StateHasChanged();
+}
+
+
+
+}

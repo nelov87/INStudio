@@ -659,3 +659,8 @@ obj/Debug/net5.0/staticwebassets/INStudio.StaticWebAssets.Manifest.cache
 obj/Debug/net5.0/staticwebassets/INStudio.StaticWebAssets.xml
 appsettings.json
 appsettings.Development.json
+obj/Debug/net5.0/Razor/Areas/Administration/CorouselComponents/AddCorousel.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/CorouselComponents/AllCarousels.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Identity/Pages/Shared/_AccountLayout.cshtml.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CorouselComponents/AddCorousel.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CorouselComponents/AllCarousels.razor.g.cs

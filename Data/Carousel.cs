@@ -25,6 +25,7 @@ namespace INStudio.Data
         public Carousel()
         {
             this.Id = Guid.NewGuid().ToString();
+            this.Ative = true;
                  
         }
     }
