@@ -16,6 +16,8 @@ namespace INStudio.Data
         public string Description { get; set; }
 
         public string Link { get; set; }
+        public string MediaId { get; set; }
+        public INMedia Media { get; set; }
 
         public int? Number { get; set; }
 

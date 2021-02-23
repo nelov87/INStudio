@@ -103,6 +103,8 @@ namespace INStudio.Data
             .HasOne<MediaType>(im => im.Type)
             .WithMany(mt => mt.INMedias)
             .HasForeignKey(im => im.TypeId);
+
+            
             
 
         }

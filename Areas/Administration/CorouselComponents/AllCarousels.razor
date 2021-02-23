@@ -1,6 +1,7 @@
 @page "/Administration/Corousel/All"
 @inject ICarouselService carouselService
 @inject ApplicationDbContext db
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 
 
 
@@ -28,10 +29,11 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
-                      <th>ID</th>
                       <th>Title</th>
                       <th>Number</th>
+                      <th>Image</th>
                       <th>Active</th>
+                      <th>Action</th>
                       
                     </tr>
                   </thead>
@@ -39,9 +41,7 @@
                     @foreach (var item in @carouselsList)
                     {
                         <tr>
-                            <td>
-                                @item.Id
-                            </td>
+                            
                             <td>
                                 @item.Title
                             </td>
@@ -49,7 +49,16 @@
                                 @item.Number
                             </td>
                             <td>
-                                @item.Ative
+                                 @if(item.MediaId != null)
+                                 {
+                                   <img src="@GetMedia(item.MediaId)" alt="Girl in a jacket" width="100" height="auto"> 
+                                 }
+                            </td>
+                            <td>
+                                @item.Ative 
+                            </td>
+                            <td>
+                                <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
                             </td>
                         </tr>
                     }
@@ -59,26 +68,14 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
+            
           </div>
         
         </div>
     </section>
 
-<section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>General Form</h1>
-          </div>
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">General Form</li>
-            </ol>
-          </div>
-        </div>
-      </div><!-- /.container-fluid -->
-    </section>
+
+    
 
 
     <section class="content">
@@ -92,7 +89,7 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <EditForm id="@pageId" Model="@carouselModel" OnSubmit="@ZimiTooBukluk" >
+              <EditForm id="@pageId" Model="@carouselModel" OnSubmit="@HandleValidSubmit" >
                 <ChildContent Context="another_name">
                   <DataAnnotationsValidator/>
                 <div class="card-body">
@@ -112,8 +109,22 @@
                     <label for="carouselModel.Link">Link</label>
                     <InputText class="form-control" @bind-Value="carouselModel.Link"/>
                   </div>
-                  
-                  <button type="submit">Submit</button>
+                  <div class="form-group">
+                    <label for="carouselModel.Ative">Active</label>
+                    <InputCheckbox @bind-Value="carouselModel.Ative" />
+                  </div>
+                  <div class="form-group">
+                    
+                    <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
+                  </div>
+                  <button type="submit"class="btn btn-success">Save</button> 
+                  <form @onsubmit="OnSubmit">
+                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
+                    <br /><br />
+                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
+                  </form>
+
+                  <h3>@Message</h3>
                 </div>
                 <!-- /.card-body -->
                 </ChildContent>
@@ -141,41 +152,59 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <p><span>@carouselModel.Title</span></p>
-                <p><span>@carouselModel.Number</span></p>
-                <p><span>@carouselModel.Id</span></p>
-                @* <form role="form">
-                  
-                  
+                
 
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <!-- checkbox -->
-                      <div class="form-group">
-                        <div class="form-check">
-                          <input class="form-check-input" type="checkbox">
-                          <label class="form-check-label">Checkbox</label>
-                        </div>
-                        
-                        
-                      </div>
-                    </div> 
-                    
-                  </div>
 
-                  
-
-                  
-                </form> *@
               </div>
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
           </div>
 
+
       </div>
     </section>
     <!-- /.content -->
+
+
+@if(showModal)
+{
+<div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Large Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+              <div id="scrollable-content">
+                                <ul>
+                                    @foreach (var image in @mediaList)
+                                    {
+                                        <li>
+                                            <input type="checkbox" id="cb\@image.Title" @onchange="eventArgs => { CheckboxClicked(image, eventArgs.Value); }" />
+                                            <label for="cb\@image.Title"><img src="@image.Path" /></label>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => CloseModal()">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+}
+
 
 </div>
 
@@ -192,7 +221,10 @@
 @code
 {
 string pageId = "abv";
-
+bool showModal = false;
+string Message = "Не са избрани файлове.";
+private HashSet<INMedia> mediaList;
+IReadOnlyList<IBrowserFile> selectedFiles;
 private HashSet<Carousel> carouselsList;
   private Carousel carouselModel = new Carousel();
 
@@ -200,7 +232,7 @@ private HashSet<Carousel> carouselsList;
         {
             base.OnInitialized();
             
-            
+            mediaList = this.db.INMedias.ToHashSet();
             carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
             //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
             //this.carouselService.AddCarousel(cc);
@@ -208,20 +240,91 @@ private HashSet<Carousel> carouselsList;
             StateHasChanged();
         }
 
-  void ZimiTooBukluk(EditContext editContext)
+  void HandleValidSubmit(EditContext editContext)
   {
     
       
     
     this.carouselService.AddCarousel(carouselModel);
-    
+    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
+    carouselModel = new Carousel();
     StateHasChanged();
   }
-
+  
   void HandleInValidSubmit(EditContext editContext)
   {
     this.carouselService.AddCarousel(new Carousel(){Title = "zzzzz", Description = "xxx", Link = "ccc", Number = 1 });
   }
 
+  void DeleteItem(string id)
+  {
+    this.carouselService.DeleteCarousel(id);
+    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
+    StateHasChanged();
+  }
+
+
+  void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles.Count} избран файл.";
+        this.StateHasChanged();
+    }
+
+    async void OnSubmit()
+    {
+        foreach (var file in selectedFiles)
+        {
+            string giud = Guid.NewGuid().ToString();
+            Stream stream = file.OpenReadStream(500000000);
+            var filePath = "/Uploads/" + giud + file.Name;
+            var cwrf = env.WebRootPath;
+            var path = Path.Combine(cwrf, "Uploads", giud + file.Name);
+            FileStream fs = File.Create(path);
+
+            await stream.CopyToAsync(fs);
+            stream.Close();
+            fs.Close();
+            INMedia img = new INMedia();
+            img.Title = file.Name;
+            img.Path = filePath;
+            img.Description = "";
+            
+            this.db.INMedias.Add(img);
+            this.db.SaveChanges();
+        }
+        Message = $"{selectedFiles.Count} файлове качени на сървъра.";
+        this.StateHasChanged();
+    }
+
+    void CheckboxClicked(INMedia image, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            carouselModel.MediaId = image.Id;
+        }
+        else
+        {
+            
+        }
+    }
+
+    void OpenModal()
+    {
+      showModal = true;
+      StateHasChanged();
+    }
+
+    void CloseModal()
+    {
+      showModal = false;
+      StateHasChanged();
+    }
   
+  string GetMedia(string id)
+  {
+    string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
+
+    return path;
+  }
 }    
