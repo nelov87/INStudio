@@ -1,10 +1,6 @@
-@page "/Administration/Corousel/All"
-@inject ICarouselService carouselService
+@page "/Administration/Media/All"
 @inject ApplicationDbContext db
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
-@using Microsoft.EntityFrameworkCore
-
-
 
 <div class="content-wrapper">
     <section class="content">
@@ -31,15 +27,15 @@
                   <thead>
                     <tr>
                       <th>Title</th>
-                      <th>Number</th>
+                      <th>Type</th>
                       <th>Image</th>
-                      <th>Active</th>
+                      <th>Description</th>
                       <th>Action</th>
                       
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach (var item in @carouselsList)
+                    @foreach (var item in @mediaList)
                     {
                         <tr>
                             
@@ -47,17 +43,12 @@
                                 @item.Title
                             </td>
                             <td>
-                                @item.Number
+                                @item.Type.Type
                             </td>
                             <td>
-                                 @if(item.MediaId != null)
-                                 {
-                                   <img src="@GetMedia(item.MediaId)" alt="Girl in a jacket" width="100" height="auto"> 
-                                 }
+                                 <img src="@item.Path" alt="Girl in a jacket" width="100" height="auto"> 
                             </td>
-                            <td>
-                                @item.Ative 
-                            </td>
+                            
                             <td>
                                 <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
                             </td>
@@ -90,46 +81,11 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <EditForm id="@pageId" Model="@carouselModel" OnSubmit="@HandleValidSubmit" >
-                <ChildContent Context="another_name">
-                  <DataAnnotationsValidator/>
-                <div class="card-body">
-                  <div class="form-group">
-                    <label for="ecarouselModel.Title">Title</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Title"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="arouselModel.Description">Description</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Description"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Number">Number</label>
-                    <InputNumber class="form-control" @bind-Value="carouselModel.Number"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Link">Link</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Link"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Ative">Active</label>
-                    <InputCheckbox @bind-Value="carouselModel.Ative" />
-                  </div>
-                  <div class="form-group">
-                    
-                    <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
-                  </div>
-                  <button type="submit"class="btn btn-success">Save</button> 
-                  <form @onsubmit="OnSubmit">
-                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
-                    <br /><br />
-                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
-                  </form>
+              <div class="card-body">
+                <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
+              </div>
 
-                  <h3>@Message</h3>
-                </div>
-                <!-- /.card-body -->
-                </ChildContent>
-              </EditForm>
+              
                 <div class="card-footer">
                   @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
                 </div>
@@ -167,10 +123,9 @@
     </section>
     <!-- /.content -->
 
-
 @if(showModal)
 {
-<div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
+  <div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
@@ -181,22 +136,16 @@
             </div>
             <div class="modal-body">
               <p>One fine body&hellip;</p>
-              <div id="scrollable-content">
-                                <ul>
-                                    @foreach (var image in @mediaList)
-                                    {
-                                        <li>
-                                            <input type="checkbox" id="cb\@image.Title" @onchange="eventArgs => { CheckboxClicked(image, eventArgs.Value); }" />
-                                            <label for="cb\@image.Title"><img src="@image.Path" /></label>
-                                        </li>
-
-                                    }
-                                </ul>
-                            </div>
+              <form @onsubmit="OnSubmit">
+                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
+                    <br /><br />
+                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
+                    <span>@Message</span>
+                  </form>
             </div>
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => CloseModal()">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              
             </div>
           </div>
           <!-- /.modal-content -->
@@ -211,14 +160,6 @@
 
 
 
-
-
-
-
-
-
-
-
 @code
 {
 string pageId = "abv";
@@ -226,47 +167,42 @@ bool showModal = false;
 string Message = "Не са избрани файлове.";
 private HashSet<INMedia> mediaList;
 IReadOnlyList<IBrowserFile> selectedFiles;
-private HashSet<Carousel> carouselsList;
-  private Carousel carouselModel = new Carousel();
 
-void GetAllMedias()
-{
-  this.mediaList = db.INMedias.ToHashSet();
-}
+  private INMedia mediaModel = new INMedia();
+
     protected override void OnInitialized()
         {
             base.OnInitialized();
             
-            GetAllMedias();
-            carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
-            //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
-            //this.carouselService.AddCarousel(cc);
+            mediaList = this.db.INMedias.ToHashSet();
+            
+            
 
             StateHasChanged();
         }
 
-  void HandleValidSubmit(EditContext editContext)
+  async void HandleValidSubmit(EditContext editContext)
   {
     
       
     
-    this.carouselService.AddCarousel(carouselModel);
-    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
-    carouselModel = new Carousel();
+    this.db.INMedias.Add(mediaModel);
+    this.db.SaveChanges();
+    mediaModel = new INMedia();
     StateHasChanged();
   }
   
   void HandleInValidSubmit(EditContext editContext)
   {
-    this.carouselService.AddCarousel(new Carousel(){Title = "zzzzz", Description = "xxx", Link = "ccc", Number = 1 });
+    
   }
 
   void DeleteItem(string id)
   {
-    
-    this.carouselService.DeleteCarousel(id);
-    
-    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
+    INMedia mediaToDelete = this.db.INMedias.FirstOrDefault(x => x.Id == id);
+    this.db.INMedias.Remove(mediaToDelete);
+    this.db.SaveChanges();
+    mediaList = this.db.INMedias.ToHashSet();
     StateHasChanged();
   }
 
@@ -295,27 +231,14 @@ void GetAllMedias()
             INMedia img = new INMedia();
             img.Title = file.Name;
             img.Path = filePath;
-            img.Description = "";
+            img.Description = mediaModel.Description;
             
             this.db.INMedias.Add(img);
-            GetAllMedias();
             this.db.SaveChanges();
         }
         Message = $"{selectedFiles.Count} файлове качени на сървъра.";
-        GetAllMedias();
+        mediaList = this.db.INMedias.ToHashSet();
         this.StateHasChanged();
-    }
-
-    void CheckboxClicked(INMedia image, object checkedValue)
-    {
-        if ((bool)checkedValue)
-        {
-            carouselModel.MediaId = image.Id;
-        }
-        else
-        {
-            
-        }
     }
 
     void OpenModal()

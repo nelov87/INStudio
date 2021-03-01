@@ -664,3 +664,10 @@ obj/Debug/net5.0/Razor/Areas/Administration/CorouselComponents/AllCarousels.razo
 obj/Debug/net5.0/Razor/Areas/Identity/Pages/Shared/_AccountLayout.cshtml.g.cs
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CorouselComponents/AddCorousel.razor.g.cs
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CorouselComponents/AllCarousels.razor.g.cs
+bin/Debug/net5.0/wwwroot/AdminLTE/tinymce/tinymce.min.js
+obj/Debug/net5.0/Razor/Areas/Administration/INMediaComponents/INMediaAll.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/Shared/Textarea.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/SkilsComponents/SkilsComponent.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/INMediaComponents/INMediaAll.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/Shared/Textarea.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/SkilsComponents/SkilsComponent.razor.g.cs

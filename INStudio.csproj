@@ -33,6 +33,9 @@
     <Content Update="wwwroot\AdminLTE\plugins\chart.js\Chart.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="wwwroot\AdminLTE\tinymce\tinymce.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

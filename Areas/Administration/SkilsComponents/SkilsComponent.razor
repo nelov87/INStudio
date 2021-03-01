@@ -1,10 +1,8 @@
-@page "/Administration/Corousel/All"
+@page "/Administration/Skils/All"
 @inject ICarouselService carouselService
 @inject ApplicationDbContext db
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
-@using Microsoft.EntityFrameworkCore
-
-
+@using INStudio.Areas.Administration.Shared
 
 <div class="content-wrapper">
     <section class="content">
@@ -31,15 +29,14 @@
                   <thead>
                     <tr>
                       <th>Title</th>
-                      <th>Number</th>
+                      <th>Content</th>
                       <th>Image</th>
-                      <th>Active</th>
                       <th>Action</th>
                       
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach (var item in @carouselsList)
+                    @foreach (var item in @skilsList)
                     {
                         <tr>
                             
@@ -47,17 +44,15 @@
                                 @item.Title
                             </td>
                             <td>
-                                @item.Number
+                                @item.Content
                             </td>
                             <td>
-                                 @if(item.MediaId != null)
+                                 @if(item.ImageId != null)
                                  {
-                                   <img src="@GetMedia(item.MediaId)" alt="Girl in a jacket" width="100" height="auto"> 
+                                   <img src="@GetMedia(item.ImageId)" alt="Girl in a jacket" width="100" height="auto"> 
                                  }
                             </td>
-                            <td>
-                                @item.Ative 
-                            </td>
+                            
                             <td>
                                 <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
                             </td>
@@ -90,30 +85,20 @@
               </div>
               <!-- /.card-header -->
               <!-- form start -->
-              <EditForm id="@pageId" Model="@carouselModel" OnSubmit="@HandleValidSubmit" >
+              <EditForm id="@pageId" Model="@skilModel" OnSubmit="@HandleValidSubmit" >
                 <ChildContent Context="another_name">
                   <DataAnnotationsValidator/>
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="ecarouselModel.Title">Title</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Title"/>
+                    <label for="skilModel.Title">Title</label>
+                    <InputText class="form-control" @bind-Value="skilModel.Title"/>
                   </div>
                   <div class="form-group">
-                    <label for="arouselModel.Description">Description</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Description"/>
+                    <label for="skilModel.Content">Content</label>
+                    <Textarea @bind-Value="skilModel.Content" />
+                    @* <InputText class="form-control" @bind-Value="skilModel.Content"/> *@
                   </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Number">Number</label>
-                    <InputNumber class="form-control" @bind-Value="carouselModel.Number"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Link">Link</label>
-                    <InputText class="form-control" @bind-Value="carouselModel.Link"/>
-                  </div>
-                  <div class="form-group">
-                    <label for="carouselModel.Ative">Active</label>
-                    <InputCheckbox @bind-Value="carouselModel.Ative" />
-                  </div>
+                  
                   <div class="form-group">
                     
                     <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
@@ -212,13 +197,6 @@
 
 
 
-
-
-
-
-
-
-
 @code
 {
 string pageId = "abv";
@@ -226,50 +204,48 @@ bool showModal = false;
 string Message = "Не са избрани файлове.";
 private HashSet<INMedia> mediaList;
 IReadOnlyList<IBrowserFile> selectedFiles;
-private HashSet<Carousel> carouselsList;
-  private Carousel carouselModel = new Carousel();
+private HashSet<Skils> skilsList;
+  private Skils skilModel = new Skils();
+
+
 
 void GetAllMedias()
 {
   this.mediaList = db.INMedias.ToHashSet();
 }
-    protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            
-            GetAllMedias();
-            carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
-            //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
-            //this.carouselService.AddCarousel(cc);
 
-            StateHasChanged();
-        }
+protected override void OnInitialized()
+{
+    base.OnInitialized();
+    
+    GetAllMedias();
+    skilsList = this.db.Skils.ToHashSet();
+    //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
+    //this.carouselService.AddCarousel(cc);
+    StateHasChanged();
+}
 
-  void HandleValidSubmit(EditContext editContext)
+void HandleValidSubmit(EditContext editContext)
   {
     
       
     
-    this.carouselService.AddCarousel(carouselModel);
-    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
-    carouselModel = new Carousel();
+    this.db.Skils.Add(skilModel);
+    this.db.SaveChanges();
+    skilsList = this.db.Skils.ToHashSet();
+    skilModel = new Skils();
     StateHasChanged();
-  }
-  
-  void HandleInValidSubmit(EditContext editContext)
-  {
-    this.carouselService.AddCarousel(new Carousel(){Title = "zzzzz", Description = "xxx", Link = "ccc", Number = 1 });
   }
 
   void DeleteItem(string id)
   {
     
-    this.carouselService.DeleteCarousel(id);
-    
-    carouselsList = this.carouselService.GetAllCarouse().ToHashSet();
+    Skils skilToDelete = this.db.Skils.FirstOrDefault(x => x.Id == id);
+    this.db.Skils.Remove(skilToDelete);
+    this.db.SaveChanges();
+    skilsList = this.db.Skils.ToHashSet();
     StateHasChanged();
   }
-
 
   void OnInputFileChange(InputFileChangeEventArgs e)
     {
@@ -310,7 +286,7 @@ void GetAllMedias()
     {
         if ((bool)checkedValue)
         {
-            carouselModel.MediaId = image.Id;
+            skilModel.ImageId = image.Id;
         }
         else
         {
@@ -329,11 +305,11 @@ void GetAllMedias()
       showModal = false;
       StateHasChanged();
     }
-  
-  string GetMedia(string id)
+
+string GetMedia(string id)
   {
     string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
 
     return path;
   }
-}    
+}
