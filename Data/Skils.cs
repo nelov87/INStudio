@@ -16,7 +16,9 @@ namespace INStudio.Data
         public Skils()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Image = new INMedia();
+            
         }
+
+        
     }
 }

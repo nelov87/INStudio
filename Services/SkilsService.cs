@@ -103,5 +103,10 @@ namespace INStudio.Services
             }
             return skil;
         }
+
+        public string GetImagePath(string id)
+        {
+            return this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
+        }
     }
 }

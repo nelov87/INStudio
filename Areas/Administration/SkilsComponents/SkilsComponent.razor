@@ -3,6 +3,11 @@
 @inject ApplicationDbContext db
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 @using INStudio.Areas.Administration.Shared
+@inject INStudio.Services.ISkilsService skilsService
+@using Microsoft.EntityFrameworkCore
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@inject IToastService toastService
 
 <div class="content-wrapper">
     <section class="content">
@@ -21,10 +26,7 @@
                       <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
                     </div>
                   </div>
-                </div>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
+                </div>toastService.ShowToast(ToastLevel.Info, message);-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
@@ -49,7 +51,13 @@
                             <td>
                                  @if(item.ImageId != null)
                                  {
+                                   //@GetMedia(item.ImageId)
+                                   //@item.ImageId
                                    <img src="@GetMedia(item.ImageId)" alt="Girl in a jacket" width="100" height="auto"> 
+                                 }
+                                 else
+                                 {
+                                   <span>picture</span>
                                  }
                             </td>
                             
@@ -104,11 +112,7 @@
                     <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
                   </div>
                   <button type="submit"class="btn btn-success">Save</button> 
-                  <form @onsubmit="OnSubmit">
-                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
-                    <br /><br />
-                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
-                  </form>
+                  
 
                   <h3>@Message</h3>
                 </div>
@@ -117,6 +121,12 @@
               </EditForm>
                 <div class="card-footer">
                   @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
+                  <form @onsubmit="OnSubmit">
+                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
+                    <br /><br />
+                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
+                  </form>
+                  <button class="btn btn-info" @onclick="@(() => toastService.ShowInfo("I'm an INFO message"))">Info Toast</button>
                 </div>
                 
               
@@ -219,7 +229,7 @@ protected override void OnInitialized()
     base.OnInitialized();
     
     GetAllMedias();
-    skilsList = this.db.Skils.ToHashSet();
+    skilsList = this.db.Skils.Include(x => x.Image).ToHashSet();
     //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
     //this.carouselService.AddCarousel(cc);
     StateHasChanged();
@@ -230,19 +240,38 @@ void HandleValidSubmit(EditContext editContext)
     
       
     
-    this.db.Skils.Add(skilModel);
-    this.db.SaveChanges();
-    skilsList = this.db.Skils.ToHashSet();
+    bool operationOk = this.skilsService.AddSkill(skilModel);
+
+    if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Added Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not added!");
+    }
+
+    
+    skilsList = this.skilsService.GetAllSkils().ToHashSet();
     skilModel = new Skils();
     StateHasChanged();
   }
 
   void DeleteItem(string id)
   {
-    
-    Skils skilToDelete = this.db.Skils.FirstOrDefault(x => x.Id == id);
-    this.db.Skils.Remove(skilToDelete);
-    this.db.SaveChanges();
+    bool operationOk = this.skilsService.DeleteSkill(id);
+
+    if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Deleted Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not deleted!");
+    }
+    //Skils skilToDelete = this.db.Skils.FirstOrDefault(x => x.Id == id);
+    //this.db.Skils.Remove(skilToDelete);
+    //this.db.SaveChanges();
     skilsList = this.db.Skils.ToHashSet();
     StateHasChanged();
   }
@@ -306,10 +335,11 @@ void HandleValidSubmit(EditContext editContext)
       StateHasChanged();
     }
 
-string GetMedia(string id)
-  {
-    string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
+string GetMedia(string mediaId)
+{
+  
+  string path = this.mediaList.FirstOrDefault(x => x.Id == mediaId).Path;
+  return path;
+}
 
-    return path;
-  }
 }

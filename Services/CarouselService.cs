@@ -17,10 +17,10 @@ namespace INStudio.Services
         public bool AddCarousel(Carousel carousel)
         {
             bool operationOk = true;
-            this.db.Carousels.Add(carousel);
-                this.db.SaveChanges();
+            
             try{
-                
+                this.db.Carousels.Add(carousel);
+                this.db.SaveChanges();
             }
             catch(Exception e)
             {

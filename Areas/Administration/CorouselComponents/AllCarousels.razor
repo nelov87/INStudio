@@ -54,6 +54,10 @@
                                  {
                                    <img src="@GetMedia(item.MediaId)" alt="Girl in a jacket" width="100" height="auto"> 
                                  }
+                                 else
+                                 {
+                                   <span>picture</span>
+                                 }
                             </td>
                             <td>
                                 @item.Ative 
@@ -332,7 +336,7 @@ void GetAllMedias()
   
   string GetMedia(string id)
   {
-    string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
+    string path = this.mediaList.FirstOrDefault(x => x.Id == id).Path;
 
     return path;
   }

@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using INStudio.Services;
+using Blazored.Toast;
+using Blazored.Toast.Services;
 
 namespace INStudio
 {
@@ -54,6 +56,7 @@ namespace INStudio
             services.AddTransient<IGalleryService, GalleryService>();
             services.AddTransient<IINMediaService, INMediaService>();
             services.AddTransient<IINServicesService, INServicesService>();
+            services.AddBlazoredToast();
             
 
 

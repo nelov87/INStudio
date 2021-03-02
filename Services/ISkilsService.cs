@@ -11,5 +11,6 @@ namespace INStudio.Services
          bool DeleteSkill(string id);
          Skils GetSkill(string id);
          ICollection<Skils> GetAllSkils();
+         string GetImagePath(string id);
     }
 }
