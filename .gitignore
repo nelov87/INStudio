@@ -675,3 +675,5 @@ bin/Debug/net5.0/Blazored.Toast.dll
 obj/Debug/net5.0/Razor/Areas/Administration/Shared/Toast.razor.g.cs
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CategoriesComponents/AllCategories.razor.g.cs
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/Shared/Toast.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/AppUsersComponents/UsersAll.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/AppUsersComponents/UsersAll.razor.g.cs
