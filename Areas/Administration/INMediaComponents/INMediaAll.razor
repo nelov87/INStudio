@@ -1,8 +1,12 @@
 @page "/Administration/Media/All"
 @inject ApplicationDbContext db
 @inject IMediaTypeService mtService
+@inject IINMediaService inmService
 @using INStudio.Data
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@inject IToastService toastService
 
 <div class="content-wrapper">
   <section class="content">
@@ -48,7 +52,14 @@
                       @item.Title
                     </td>
                     <td>
-                      @item.Type.Type
+                      @if(item.Type != null)
+                      {
+                        @item.Type.Type
+                      }
+                      else
+                      {
+                          <span>no type</span>
+                      }
                     </td>
                     <td>
                       <img src="@item.Path" alt="Girl in a jacket" width="100" height="auto">
@@ -184,7 +195,7 @@
   string pageId = "abv";
   bool showModal = false;
   string Message = "Не са избрани файлове.";
-  private HashSet<INMedia> mediaList;
+  private HashSet<INMedia> mediaList = new HashSet<INMedia>();
   private HashSet<INStudio.Data.MediaType> mediaTypes;
   IReadOnlyList<IBrowserFile> selectedFiles;
 
@@ -194,7 +205,7 @@
   {
     base.OnInitialized();
 
-    mediaList = this.db.INMedias.ToHashSet();
+    mediaList = this.inmService.GetImages().ToHashSet();
     mediaTypes = mtService.GetAllMediaTypes().ToHashSet();
 
 
@@ -203,11 +214,8 @@
 
   async void HandleValidSubmit(EditContext editContext)
   {
-
-
-
-    this.db.INMedias.Add(mediaModel);
-    this.db.SaveChanges();
+    inmService.AddImage(mediaModel);
+    
     mediaModel = new INMedia();
     StateHasChanged();
   }
@@ -219,10 +227,18 @@
 
   void DeleteItem(string id)
   {
-    INMedia mediaToDelete = this.db.INMedias.FirstOrDefault(x => x.Id == id);
-    this.db.INMedias.Remove(mediaToDelete);
-    this.db.SaveChanges();
-    mediaList = this.db.INMedias.ToHashSet();
+    bool operationOk = inmService.DeleteImage(id);
+
+    if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Deleted Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not deleted!");
+    }
+    
+    mediaList = this.inmService.GetImages().ToHashSet();
     StateHasChanged();
   }
 
@@ -253,11 +269,21 @@
       mediaModel.Path = filePath;
       mediaModel.Description = mediaModel.Description;
 
-      this.db.INMedias.Add(mediaModel);
-      this.db.SaveChanges();
+      bool operationOk = inmService.AddImage(mediaModel);
+
+      if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Added Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not Added!");
+    }
+      
     }
     Message = $"{selectedFiles.Count} файлове качени на сървъра.";
-    mediaList = this.db.INMedias.ToHashSet();
+    mediaList = this.inmService.GetImages().ToHashSet();
+    mediaModel = new INMedia();
     this.StateHasChanged();
   }
 
@@ -280,7 +306,7 @@
 
   string GetMedia(string id)
   {
-    string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
+    string path = this.inmService.GetImage(id).Path;
 
     return path;
   }

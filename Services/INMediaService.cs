@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using INStudio.Data;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace INStudio.Services
@@ -9,9 +10,9 @@ namespace INStudio.Services
     public class INMediaService : IINMediaService
     {
         public ApplicationDbContext db { get; set; }
-        public INMediaService(ApplicationDbContext db)
+        public INMediaService(ApplicationDbContext dba)
         {
-            this.db = db;
+            this.db = dba;
         }
         public bool AddImage(INMedia media)
         {
@@ -22,7 +23,7 @@ namespace INStudio.Services
                 this.db.INMedias.Add(media);
                 this.db.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 operationOk = false;
@@ -44,7 +45,7 @@ namespace INStudio.Services
                 this.db.SaveChanges();
 
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 operationOk = false;
@@ -65,10 +66,10 @@ namespace INStudio.Services
                 mediaToEdit.Path = media.Path;
                 mediaToEdit.Type = media.Type;
                 mediaToEdit.TypeId = media.TypeId;
-                
+
                 this.db.SaveChanges();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
                 operationOk = false;
@@ -84,10 +85,10 @@ namespace INStudio.Services
             {
                 mediaToReturn = this.db.INMedias.FirstOrDefault(x => x.Id == id);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                mediaToReturn = new INMedia(){Title = "Default Media", Path = "/images/defoultimage.png"};
+                mediaToReturn = new INMedia() { Title = "Default Media", Path = "/images/defoultimage.png" };
             }
             return mediaToReturn;
         }
@@ -98,12 +99,13 @@ namespace INStudio.Services
 
             try
             {
-                imageList = this.db.INMedias.ToHashSet();
+                
+                imageList = this.db.INMedias.Include(x => x.Type).ToHashSet();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                imageList.Add(new INMedia(){Title = "Default Media. NoImages", Path = "/images/defoultimage.png"});
+
             }
             return imageList;
         }
@@ -112,15 +114,16 @@ namespace INStudio.Services
         {
             HashSet<INMedia> imageList = new HashSet<INMedia>();
 
-            try{
+            try
+            {
                 GalleryINMedia[] gm = this.db.GalleryINMedias.Where(x => x.GalleryId == galleryId).ToArray();
-                
-                foreach(var galleryPair in gm)
+
+                foreach (var galleryPair in gm)
                 {
                     imageList.Add(this.db.INMedias.FirstOrDefault(x => x.Id == galleryPair.INMediaId));
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e.Message);
             }
