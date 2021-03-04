@@ -1,0 +1,246 @@
+@page "/Administration/Media/Type/All"
+@inject ApplicationDbContext db
+@using INStudio.Data
+@inject IMediaTypeService mtService
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@inject IToastService toastService
+
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Media Types</h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      
+                      <th>Type</th>
+                      
+                      <th>Action</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach (var item in @mediaTypeList)
+                    {
+                        <tr>
+                            
+                            <td>
+                                @item.Type
+                            </td>
+                            
+                            
+                            
+                            <td>
+                                <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+        
+        </div>
+    </section>
+
+
+    
+
+
+    <section class="content">
+      <div class="row">
+
+          <div class="col-md-10">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Options</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <div class="card-body">
+                <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Type</button>
+              </div>
+
+              
+                <div class="card-footer">
+                  @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
+                </div>
+                
+              
+            </div>
+            <!-- /.card -->
+
+            
+            
+
+          </div>
+          <!-- /div col-6 /.col (left) -->
+
+
+          <div class="col-md-2">
+              <!-- general form elements disabled -->
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">General Elements</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+
+      </div>
+    </section>
+    <!-- /.content -->
+
+@if(showModal)
+{
+  <div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Add Type</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>Ener Title an Description for category.</p>
+              <EditForm id="@pageId" Model="mediaTypeModel" OnValidSubmit="@HandleValidSubmit">
+                  <DataAnnotationsValidator/>
+                  <div class="form-group">
+                    <label for="categoryModel.Title">Type</label>
+                    <InputText class="form-control" @bind-Value="mediaTypeModel.Type"/>
+                  </div>
+                  
+                    
+              </EditForm>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => CloseModal()">Close</button>
+              <button type="submit" form="@pageId" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+}
+
+
+</div>
+
+
+
+@code
+{
+string pageId = "abv";
+bool showModal = false;
+
+protected HashSet<INStudio.Data.MediaType> mediaTypeList;
+
+
+  protected INStudio.Data.MediaType mediaTypeModel = new INStudio.Data.MediaType();
+
+    protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            
+            mediaTypeList = this.mtService.GetAllMediaTypes().ToHashSet();
+            
+            
+
+            StateHasChanged();
+        }
+
+  async void HandleValidSubmit(EditContext editContext)
+  {
+    
+      
+    
+    bool operationOk = this.mtService.AddMediaType(mediaTypeModel.Type);
+
+    if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Added Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not added!");
+    }
+
+    mediaTypeList = this.mtService.GetAllMediaTypes().ToHashSet();
+    mediaTypeModel = new INStudio.Data.MediaType();
+    StateHasChanged();
+  }
+  
+  void HandleInValidSubmit(EditContext editContext)
+  {
+    
+  }
+
+  void DeleteItem(string id)
+  {
+    bool operationOk = this.mtService.DeleteMediaType(id);
+
+    if(operationOk)
+    {
+      toastService.ShowToast(ToastLevel.Success, "Deleted Sucsesfuly!");
+    }
+    else
+    {
+      toastService.ShowToast(ToastLevel.Error, "Not deleted!");
+    }
+
+    mediaTypeList = this.mtService.GetAllMediaTypes().ToHashSet();
+    StateHasChanged();
+  }
+
+
+  
+
+    void OpenModal()
+    {
+      showModal = true;
+      StateHasChanged();
+    }
+
+    void CloseModal()
+    {
+      showModal = false;
+      StateHasChanged();
+    }
+  
+  
+}    

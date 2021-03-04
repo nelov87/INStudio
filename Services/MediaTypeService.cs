@@ -10,7 +10,7 @@ namespace INStudio.Services
     {
         public ApplicationDbContext db { get; set; }
 
-        public MediaTypeService(ApplicationDbContext bd)
+        public MediaTypeService(ApplicationDbContext db)
         {
             this.db = db;
         }
@@ -33,13 +33,13 @@ namespace INStudio.Services
             return operationOk;
         }
 
-        public bool DeleteMediaType(string typeToDelete)
+        public bool DeleteMediaType(string id)
         {
             bool operationOk = true;
 
             try
             {
-                MediaType type = this.db.MediaTypes.FirstOrDefault(x => x.Type == typeToDelete);
+                MediaType type = this.db.MediaTypes.FirstOrDefault(x => x.Id == id);
                 this.db.MediaTypes.Remove(type);
                 this.db.SaveChanges();
             }
@@ -81,7 +81,7 @@ namespace INStudio.Services
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e.Message + "GetAllMediaTypes");
                 
             }
             return mediaTypeList;

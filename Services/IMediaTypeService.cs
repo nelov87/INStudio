@@ -10,7 +10,7 @@ namespace INStudio.Services
     {
          bool AddMediaType(string type);
          bool EditMediaType(string olbType, string newType);
-         bool DeleteMediaType(string typeToDelete);
+         bool DeleteMediaType(string id);
          ICollection<MediaType> GetAllMediaTypes();
          
     }

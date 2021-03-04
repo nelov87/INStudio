@@ -677,3 +677,6 @@ obj/Debug/net5.0/RazorDeclaration/Areas/Administration/CategoriesComponents/AllC
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/Shared/Toast.razor.g.cs
 obj/Debug/net5.0/Razor/Areas/Administration/AppUsersComponents/UsersAll.razor.g.cs
 obj/Debug/net5.0/RazorDeclaration/Areas/Administration/AppUsersComponents/UsersAll.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/INMediaComponents/MediaType.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/INMediaComponents/MediaType.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/MediaTypeComponents/MediaTypeAll.razor.g.cs

@@ -30,7 +30,7 @@ namespace INStudio.Data
         {
             this.Id = Guid.NewGuid().ToString();
             this.INMediaCategories = new HashSet<INMediaCategory>();
-            this.Type = new MediaType();
+            
             this.GalleryINMedias = new HashSet<GalleryINMedia>();
         }
     }
