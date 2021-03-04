@@ -16,19 +16,19 @@
 
 
 
-ul {
+.ulcustompopup {
     list-style-type: none;
 }
 
-li {
+.licustompopup {
     display: inline-block;
 }
 
-input[type="checkbox"][id^="cb"] {
+.inputcustompopup[type="checkbox"][id^="cb"] {
     display: none;
 }
 
-label {
+.labelcustompopup {
     border: 1px solid #fff;
     padding: 10px;
     display: block;

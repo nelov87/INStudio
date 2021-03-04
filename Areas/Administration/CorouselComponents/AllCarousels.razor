@@ -186,12 +186,12 @@
             <div class="modal-body">
               <p>One fine body&hellip;</p>
               <div id="scrollable-content">
-                                <ul>
+                                <ul class="ulcustompopup">
                                     @foreach (var image in @mediaList)
                                     {
-                                        <li>
-                                            <input type="checkbox" id="cb\@image.Title" @onchange="eventArgs => { CheckboxClicked(image, eventArgs.Value); }" />
-                                            <label for="cb\@image.Title"><img src="@image.Path" /></label>
+                                        <li class="licustompopup">
+                                            <input class="inputcustompopup" type="checkbox" id="cb\@image.Title" @onchange="eventArgs => { CheckboxClicked(image, eventArgs.Value); }" />
+                                            <label class="labelcustompopup" for="cb\@image.Title"><img src="@image.Path" /></label>
                                         </li>
 
                                     }
