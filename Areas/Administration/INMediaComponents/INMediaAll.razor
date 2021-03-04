@@ -1,162 +1,178 @@
 @page "/Administration/Media/All"
 @inject ApplicationDbContext db
+@inject IMediaTypeService mtService
+@using INStudio.Data
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 
 <div class="content-wrapper">
-    <section class="content">
-        <div class="row">
+  <section class="content">
+    <div class="row">
 
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Responsive Hover Table</h3>
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Responsive Hover Table</h3>
 
-                <div class="card-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+            <div class="card-tools">
+              <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
 
-                    <div class="input-group-append">
-                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                    </div>
-                  </div>
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
                 </div>
               </div>
-              <!-- /.card-header -->
-              <div class="card-body table-responsive p-0">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <td>Id</td>
-                      <th>Title</th>
-                      <th>Type</th>
-                      <th>Image</th>
-                      <th>Description</th>
-                      <th>Action</th>
-                      
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach (var item in @mediaList)
-                    {
-                        <tr>
-                            <td>
-                                @item.Id
-                            </td>
-                            <td>
-                                @item.Title
-                            </td>
-                            <td>
-                                @item.Type.Type
-                            </td>
-                            <td>
-                                 <img src="@item.Path" alt="Girl in a jacket" width="100" height="auto"> 
-                            </td>
-                            
-                            <td>
-                                <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
-                            </td>
-                        </tr>
-                    }
-                  </tbody>
-                </table>
-              </div>
-              <!-- /.card-body -->
             </div>
-            <!-- /.card -->
-            
           </div>
-        
+          <!-- /.card-header -->
+          <div class="card-body table-responsive p-0">
+            <table class="table table-hover text-nowrap">
+              <thead>
+                <tr>
+                  <td>Id</td>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Image</th>
+                  
+                  <th>Action</th>
+
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var item in @mediaList)
+                {
+                  <tr>
+                    <td>
+                      @item.Id
+                    </td>
+                    <td>
+                      @item.Title
+                    </td>
+                    <td>
+                      @item.Type.Type
+                    </td>
+                    <td>
+                      <img src="@item.Path" alt="Girl in a jacket" width="100" height="auto">
+                    </td>
+
+                    <td>
+                      <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i
+                          class="far fa-trash-alt"></i></a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          <!-- /.card-body -->
         </div>
-    </section>
+        <!-- /.card -->
+
+      </div>
+
+    </div>
+  </section>
 
 
-    
 
 
-    <section class="content">
-      <div class="row">
 
-          <div class="col-md-10">
-            <!-- general form elements -->
-            <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Quick Example</h3>
-              </div>
-              <!-- /.card-header -->
-              <!-- form start -->
-              <div class="card-body">
-                <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
-              </div>
+  <section class="content">
+    <div class="row">
 
-              
-                <div class="card-footer">
-                  @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
-                </div>
-                
-              
-            </div>
-            <!-- /.card -->
-
-            
-            
-
+      <div class="col-md-10">
+        <!-- general form elements -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Quick Example</h3>
           </div>
-          <!-- /div col-6 /.col (left) -->
-
-
-          <div class="col-md-2">
-              <!-- general form elements disabled -->
-            <div class="card card-warning">
-              <div class="card-header">
-                <h3 class="card-title">General Elements</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                
-
-
-              </div>
-              <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
+          <!-- /.card-header -->
+          <!-- form start -->
+          <div class="card-body">
+            <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Image</button>
           </div>
+
+
+          <div class="card-footer">
+            @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
+          </div>
+
+
+        </div>
+        <!-- /.card -->
+
+
 
 
       </div>
-    </section>
-    <!-- /.content -->
+      <!-- /div col-6 /.col (left) -->
 
-@if(showModal)
-{
-  <div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h4 class="modal-title">Large Modal</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <p>One fine body&hellip;</p>
-              <form @onsubmit="OnSubmit">
-                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
-                    <br /><br />
-                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
-                    <span>@Message</span>
-                  </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => CloseModal()">Close</button>
-              
-            </div>
+
+      <div class="col-md-2">
+        <!-- general form elements disabled -->
+        <div class="card card-warning">
+          <div class="card-header">
+            <h3 class="card-title">General Elements</h3>
           </div>
-          <!-- /.modal-content -->
+          <!-- /.card-header -->
+          <div class="card-body">
+
+
+
+          </div>
+          <!-- /.card-body -->
         </div>
-        <!-- /.modal-dialog -->
+        <!-- /.card -->
       </div>
-      <!-- /.modal -->
-}
+
+
+    </div>
+  </section>
+  <!-- /.content -->
+
+  @if (showModal)
+  {
+    <div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Large Modal</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>One fine body&hellip;</p>
+            
+            <form @onsubmit="OnSubmit">
+              <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple
+                maxAllowedSize="1000000" />
+              <br /><br />
+              <label>
+                Primary Classification:
+                <select >
+                  @foreach (var mtype in mediaTypes)
+                  {
+                      <option @onclick='eventArgs => { AddMediaType(mtype.Id); }'value="@mtype.Id">@mtype.Type</option>
+                  }
+                </select>
+                
+              </label>
+              <button class="btn btn-primary" type="submit">Качи на сървъра</button>
+              <span>@Message</span>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-between">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+              @onclick="() => CloseModal()">Close</button>
+
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+  }
 
 
 </div>
@@ -165,39 +181,40 @@
 
 @code
 {
-string pageId = "abv";
-bool showModal = false;
-string Message = "Не са избрани файлове.";
-private HashSet<INMedia> mediaList;
-IReadOnlyList<IBrowserFile> selectedFiles;
+  string pageId = "abv";
+  bool showModal = false;
+  string Message = "Не са избрани файлове.";
+  private HashSet<INMedia> mediaList;
+  private HashSet<INStudio.Data.MediaType> mediaTypes;
+  IReadOnlyList<IBrowserFile> selectedFiles;
 
   private INMedia mediaModel = new INMedia();
 
-    protected override void OnInitialized()
-        {
-            base.OnInitialized();
-            
-            mediaList = this.db.INMedias.ToHashSet();
-            
-            
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
 
-            StateHasChanged();
-        }
+    mediaList = this.db.INMedias.ToHashSet();
+    mediaTypes = mtService.GetAllMediaTypes().ToHashSet();
+
+
+    StateHasChanged();
+  }
 
   async void HandleValidSubmit(EditContext editContext)
   {
-    
-      
-    
+
+
+
     this.db.INMedias.Add(mediaModel);
     this.db.SaveChanges();
     mediaModel = new INMedia();
     StateHasChanged();
   }
-  
+
   void HandleInValidSubmit(EditContext editContext)
   {
-    
+
   }
 
   void DeleteItem(string id)
@@ -211,55 +228,60 @@ IReadOnlyList<IBrowserFile> selectedFiles;
 
 
   void OnInputFileChange(InputFileChangeEventArgs e)
-    {
-        selectedFiles = e.GetMultipleFiles();
-        Message = $"{selectedFiles.Count} избран файл.";
-        this.StateHasChanged();
-    }
+  {
+    selectedFiles = e.GetMultipleFiles();
+    Message = $"{selectedFiles.Count} избран файл.";
+    this.StateHasChanged();
+  }
 
-    async void OnSubmit()
+  async void OnSubmit()
+  {
+    foreach (var file in selectedFiles)
     {
-        foreach (var file in selectedFiles)
-        {
-            string giud = Guid.NewGuid().ToString();
-            Stream stream = file.OpenReadStream(500000000);
-            var filePath = "/Uploads/" + giud + file.Name;
-            var cwrf = env.WebRootPath;
-            var path = Path.Combine(cwrf, "Uploads", giud + file.Name);
-            FileStream fs = File.Create(path);
+      string giud = Guid.NewGuid().ToString();
+      Stream stream = file.OpenReadStream(500000000);
+      var filePath = "/Uploads/" + giud + file.Name;
+      var cwrf = env.WebRootPath;
+      var path = Path.Combine(cwrf, "Uploads", giud + file.Name);
+      FileStream fs = File.Create(path);
 
-            await stream.CopyToAsync(fs);
-            stream.Close();
-            fs.Close();
-            INMedia img = new INMedia();
-            img.Title = file.Name;
-            img.Path = filePath;
-            img.Description = mediaModel.Description;
-            
-            this.db.INMedias.Add(img);
-            this.db.SaveChanges();
-        }
-        Message = $"{selectedFiles.Count} файлове качени на сървъра.";
-        mediaList = this.db.INMedias.ToHashSet();
-        this.StateHasChanged();
-    }
+      await stream.CopyToAsync(fs);
+      stream.Close();
+      fs.Close();
+      
+      mediaModel.Title = file.Name;
+      mediaModel.Path = filePath;
+      mediaModel.Description = mediaModel.Description;
 
-    void OpenModal()
-    {
-      showModal = true;
-      StateHasChanged();
+      this.db.INMedias.Add(mediaModel);
+      this.db.SaveChanges();
     }
+    Message = $"{selectedFiles.Count} файлове качени на сървъра.";
+    mediaList = this.db.INMedias.ToHashSet();
+    this.StateHasChanged();
+  }
 
-    void CloseModal()
-    {
-      showModal = false;
-      StateHasChanged();
-    }
-  
+  void AddMediaType(string mtypeId)
+  {
+    mediaModel.TypeId = mtypeId;
+  }
+
+  void OpenModal()
+  {
+    showModal = true;
+    StateHasChanged();
+  }
+
+  void CloseModal()
+  {
+    showModal = false;
+    StateHasChanged();
+  }
+
   string GetMedia(string id)
   {
     string path = this.db.INMedias.FirstOrDefault(x => x.Id == id).Path;
 
     return path;
   }
-}    
+}
