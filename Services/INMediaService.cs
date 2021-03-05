@@ -83,7 +83,7 @@ namespace INStudio.Services
             INMedia mediaToReturn;
             try
             {
-                mediaToReturn = this.db.INMedias.FirstOrDefault(x => x.Id == id);
+                mediaToReturn = this.db.INMedias.Include(x => x.INMediaCategories).FirstOrDefault(x => x.Id == id);
             }
             catch (Exception e)
             {
@@ -100,7 +100,11 @@ namespace INStudio.Services
             try
             {
                 
-                imageList = this.db.INMedias.Include(x => x.Type).ToHashSet();
+                imageList = this.db.INMedias
+                .Include(x => x.Type)
+                .Include(x => x.INMediaCategories)
+                .ThenInclude(c => c.Category)
+                .ToHashSet();
             }
             catch (Exception e)
             {

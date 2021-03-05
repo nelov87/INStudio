@@ -7,6 +7,9 @@
 @using Blazored.Toast
 @using Blazored.Toast.Services
 @inject IToastService toastService
+@using System.Globalization
+@* @typeparam TValue
+@inherits InputBase<TValue> *@
 
 <div class="content-wrapper">
   <section class="content">
@@ -34,9 +37,9 @@
                 <tr>
                   <td>Id</td>
                   <th>Title</th>
+                  <th>Category</th>
                   <th>Type</th>
                   <th>Image</th>
-                  
                   <th>Action</th>
 
                 </tr>
@@ -52,6 +55,18 @@
                       @item.Title
                     </td>
                     <td>
+                      @if(item.INMediaCategories != null)
+                      {
+                        @if(item.INMediaCategories.Count >= 1)
+                        {
+                          @foreach (var cat in item.INMediaCategories)
+                          {
+                            @cat.Category.Title
+                          }
+                        }
+                      }
+                    </td>
+                    <td>
                       @if(item.Type != null)
                       {
                         @item.Type.Type
@@ -61,6 +76,7 @@
                           <span>no type</span>
                       }
                     </td>
+                    
                     <td>
                       <img src="@item.Path" alt="Girl in a jacket" width="100" height="auto">
                     </td>
@@ -166,6 +182,26 @@
                       <option @onclick='eventArgs => { AddMediaType(mtype.Id); }'value="@mtype.Id">@mtype.Type</option>
                   }
                 </select>
+              </label>
+                <label>
+                Category:
+                @foreach (var cat in categoryes)
+                  {
+
+                    <label>
+                        @cat.Title;
+                    </label>
+                    @* <input  type="checkbox" value="@cat.Id" 
+                          id="@cat.Id" name="gender" @onchange="AddCategory" /> *@
+
+                          <input  type="checkbox" value="@cat.Id" 
+                           @onchange="() => AddCategory(cat.Id)" />
+
+                    @* <input  type="checkbox" value="@cat.Id" 
+                           @onchange="eventArgs => {AddCategory(eventArgs.Value);}" /> *@
+    
+                      @* <option @onclick='eventArgs => { AddCategory(cat.Id); }'value="@cat.Id">@cat.Title</option> *@
+                  }
                 
               </label>
               <button class="btn btn-primary" type="submit">Качи на сървъра</button>
@@ -196,8 +232,13 @@
   bool showModal = false;
   string Message = "Не са избрани файлове.";
   private HashSet<INMedia> mediaList = new HashSet<INMedia>();
+  private HashSet<Category> categoryes;
+  private HashSet<Category> categoryesToAdd;
   private HashSet<INStudio.Data.MediaType> mediaTypes;
   IReadOnlyList<IBrowserFile> selectedFiles;
+
+    //[Parameter]
+    //public TValue SelectedValue { get; set; }
 
   private INMedia mediaModel = new INMedia();
 
@@ -207,7 +248,7 @@
 
     mediaList = this.inmService.GetImages().ToHashSet();
     mediaTypes = mtService.GetAllMediaTypes().ToHashSet();
-
+    categoryes = this.db.Category.ToHashSet();
 
     StateHasChanged();
   }
@@ -268,7 +309,12 @@
       mediaModel.Title = file.Name;
       mediaModel.Path = filePath;
       mediaModel.Description = mediaModel.Description;
-
+      //HashSet<INMediaCategory> mc = new HashSet<INMediaCategory>();
+      //  foreach(var cat in categoryesToAdd)
+      //  {
+      //    mc.Add(new INMediaCategory(){INMediaId = mediaModel.Id, CategoryId = cat.Id});
+      //  }
+      //mediaModel.INMediaCategories = mc;
       bool operationOk = inmService.AddImage(mediaModel);
 
       if(operationOk)
@@ -291,6 +337,32 @@
   {
     mediaModel.TypeId = mtypeId;
   }
+  void AddCategory(string id)
+  {
+    //object checkedValue
+    //ChangeEventArgs args
+    //CurrentValueAsString = args.Value.ToString();
+
+    mediaModel
+    .INMediaCategories
+    .Add(
+      new INMediaCategory(){
+        INMediaId = mediaModel.Id,
+        CategoryId = id
+        });
+    //bool success = false;
+    //success = categoryesToAdd.Any(x => x.Id == args.Value.ToString());
+    //
+    //if(!success)
+    //{
+    //  categoryesToAdd.Add(categoryes.FirstOrDefault(c => c.Id == args.Value.ToString()));
+    //}
+    //else
+    //{
+    //  categoryesToAdd.Remove(categoryes.FirstOrDefault(c => c.Id == args.Value.ToString()));
+    //}
+  }
+  
 
   void OpenModal()
   {
