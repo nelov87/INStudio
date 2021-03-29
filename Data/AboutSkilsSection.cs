@@ -14,8 +14,7 @@ namespace INStudio.Data
         public AboutSkilsSection()
         {
             this.Id = Guid.NewGuid().ToString();
-            this.Image = new INMedia();
-            this.Video = new INMedia();
+            
         }
     }
 }

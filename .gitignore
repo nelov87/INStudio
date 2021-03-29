@@ -703,3 +703,9 @@ wwwroot/Uploads/54841b3c-4f72-4112-a112-15ebf4251e9dpic.jpeg
 wwwroot/Uploads/de9ea373-b2a1-484b-823b-540e5d71c252pic.jpeg
 wwwroot/Uploads/e30e3922-c215-40bd-b406-22921eeb5c29pic.jpeg
 wwwroot/Uploads/f9b7e3fa-650c-440a-8e52-8d34c0597956pic.jpeg
+bin/Debug/net5.0/SendGrid.dll
+bin/Debug/net5.0/StarkbankEcdsa.dll
+obj/Debug/net5.0/Razor/Areas/Administration/EmailsComponents/SendMail.razor.g.cs
+obj/Debug/net5.0/Razor/Areas/Administration/SkilsComponents/AboutSkils.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/EmailsComponents/SendMail.razor.g.cs
+obj/Debug/net5.0/RazorDeclaration/Areas/Administration/SkilsComponents/AboutSkils.razor.g.cs

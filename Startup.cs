@@ -18,6 +18,11 @@ using System.Threading.Tasks;
 using INStudio.Services;
 using Blazored.Toast;
 using Blazored.Toast.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
 
 namespace INStudio
 {
@@ -37,7 +42,8 @@ namespace INStudio
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            services.AddDefaultIdentity<IdentityUser>(options => 
+            options.SignIn.RequireConfirmedEmail = false)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
@@ -57,6 +63,14 @@ namespace INStudio
             services.AddTransient<IINMediaService, INMediaService>();
             services.AddTransient<IINServicesService, INServicesService>();
             services.AddBlazoredToast();
+            	
+            services.AddTransient<IEmailSender, SendGridEmailSender>();
+            services.Configure<SendGridEmailSenderOptions>(options =>
+            {
+                options.ApiKey = Configuration["ExternalProviders:SendGrid:ApiKey"];
+                options.SenderEmail = Configuration["ExternalProviders:SendGrid:SenderEmail"]; 
+                options.SenderName = Configuration["ExternalProviders:SendGrid:SenderName"];
+            });
             
 
 

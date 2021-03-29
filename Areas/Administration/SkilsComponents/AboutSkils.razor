@@ -1,0 +1,354 @@
+@page "/Administration/AboutSkils/All"
+@inject ICarouselService carouselService
+@inject ApplicationDbContext db
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@using Microsoft.EntityFrameworkCore
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@inject IToastService toastService
+
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">About Skils</h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Description</th>
+                      <th>Image</th>
+                      <th>Video</th>
+                      <th>Action</th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach (var item in @asList)
+                    {
+                        <tr>
+                            
+                            <td>
+                                @item.Title
+                            </td>
+                            <td>
+                                @item.Description
+                            </td>
+                            <td>
+                                 @if(item.Image != null)
+                                 {
+                                   <img src="@GetMedia(item.Image.Path)" alt="Girl in a jacket" width="100" height="auto"> 
+                                 }
+                                 else
+                                 {
+                                   <span>picture</span>
+                                 }
+                            </td>
+                            <td>
+                                @if(item.Image != null)
+                                 {
+                                   <img src="@GetMedia(item.Video.Path)" alt="Girl in a jacket" width="100" height="auto"> 
+                                 }
+                                 else
+                                 {
+                                   <span>picture</span>
+                                 }
+                                 
+                            </td>
+                            <td>
+                                <a @onclick='() => DeleteItem(item.Id)' class="btn btn-outline-danger"><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    }
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+            
+          </div>
+        
+        </div>
+    </section>
+
+
+    
+
+
+    <section class="content">
+      <div class="row">
+
+          <div class="col-md-10">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">Quick Example</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <EditForm id="@pageId" Model="@asModel" OnSubmit="@HandleValidSubmit" >
+                <ChildContent Context="another_name">
+                  <DataAnnotationsValidator/>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="ecarouselModel.Title">Title</label>
+                    <InputText class="form-control" @bind-Value="asModel.Title"/>
+                  </div>
+                  <div class="form-group">
+                    <label for="arouselModel.Description">Description</label>
+                    <InputText class="form-control" @bind-Value="asModel.Description"/>
+                  </div>
+                  
+                  <div class="form-group">
+                    
+                    <button type="button" class="btn btn-primary" @onclick="@(() => OpenModal())">Add Medias</button>
+                    
+                  </div>
+                  <button type="submit"class="btn btn-success">Save</button> 
+                  <form @onsubmit="OnSubmit">
+                    <InputFile class="btn btn-block btn-secondary" OnChange="OnInputFileChange" multiple maxAllowedSize="1000000"/>
+                    <br /><br />
+                    <button class="btn btn-primary" type="submit">Качи на сървъра</button>
+                  </form>
+
+                  <h3>@Message</h3>
+                </div>
+                <!-- /.card-body -->
+                </ChildContent>
+              </EditForm>
+                <div class="card-footer">
+                  @* <button form="@pageId" type="submit" class="btn btn-success">Запиши</button> *@
+                </div>
+                
+              
+            </div>
+            <!-- /.card -->
+
+            
+            
+
+          </div>
+          <!-- /div col-6 /.col (left) -->
+
+
+          <div class="col-md-2">
+              <!-- general form elements disabled -->
+            <div class="card card-warning">
+              <div class="card-header">
+                <h3 class="card-title">General Elements</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                
+
+
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+
+
+      </div>
+    </section>
+    <!-- /.content -->
+
+
+@if(showModal)
+{
+<div class="modal" tabindex="-1" ig="modal-ld" style="display:block" role="dialog">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Large Modal</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <p>One fine body&hellip;</p>
+              <div id="scrollable-content">
+                                <ul class="ulcustompopup">
+                                    @foreach (var image in @mediaList)
+                                    {
+                                        <li class="licustompopup">
+                                            <input class="inputcustompopup" type="checkbox" id="cb\@image.Title" @onchange="eventArgs => { CheckboxClicked(image, eventArgs.Value); }" />
+                                            <label class="labelcustompopup" for="cb\@image.Title"><img src="@image.Path" /></label>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="() => CloseModal()">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+      </div>
+      <!-- /.modal -->
+}
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+@code
+{
+string pageId = "abv";
+bool showModal = false;
+string Message = "Не са избрани файлове.";
+private HashSet<INMedia> mediaList;
+IReadOnlyList<IBrowserFile> selectedFiles;
+private HashSet<AboutSkilsSection> asList;
+  private AboutSkilsSection asModel = new AboutSkilsSection();
+
+void GetAllMedias()
+{
+  this.mediaList = db.INMedias.ToHashSet();
+}
+    protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            
+            GetAllMedias();
+            asList = this.db.AboutSkilsSections.Include(i => i.Image).Include(v => v.Video).ToHashSet();
+            //Carousel cc = new Carousel(){Title = "nnnn", Description = "mmmmm", Link = "ccc", Number = 2 };
+            //this.carouselService.AddCarousel(cc);
+
+            StateHasChanged();
+        }
+
+  void HandleValidSubmit(EditContext editContext)
+  {
+    
+      
+    
+    this.db.AboutSkilsSections.Add(asModel);
+    asList = this.db.AboutSkilsSections.Include(i => i.Image).Include(v => v.Video).ToHashSet();
+    asModel = new AboutSkilsSection();
+    StateHasChanged();
+  }
+  
+  void HandleInValidSubmit(EditContext editContext)
+  {
+    
+  }
+
+  void DeleteItem(string id)
+  {
+    AboutSkilsSection asToDelete = this.db.AboutSkilsSections.FirstOrDefault(x => x.Id == id);
+    this.db.AboutSkilsSections.Remove(asToDelete);
+    
+    asList = this.db.AboutSkilsSections.Include(i => i.Image).Include(v => v.Video).ToHashSet();
+    StateHasChanged();
+  }
+
+
+  void OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        selectedFiles = e.GetMultipleFiles();
+        Message = $"{selectedFiles.Count} избран файл.";
+        this.StateHasChanged();
+    }
+
+    async void OnSubmit()
+    {
+        foreach (var file in selectedFiles)
+        {
+            string giud = Guid.NewGuid().ToString();
+            Stream stream = file.OpenReadStream(500000000);
+            var filePath = "/Uploads/" + giud + file.Name;
+            var cwrf = env.WebRootPath;
+            var path = Path.Combine(cwrf, "Uploads", giud + file.Name);
+            FileStream fs = File.Create(path);
+
+            await stream.CopyToAsync(fs);
+            stream.Close();
+            fs.Close();
+            INMedia img = new INMedia();
+            img.Title = file.Name;
+            img.Path = filePath;
+            img.Description = "";
+            
+            this.db.INMedias.Add(img);
+            GetAllMedias();
+            this.db.SaveChanges();
+        }
+        Message = $"{selectedFiles.Count} файлове качени на сървъра.";
+        GetAllMedias();
+        this.StateHasChanged();
+    }
+
+    void CheckboxClicked(INMedia media, object checkedValue)
+    {
+        if ((bool)checkedValue)
+        {
+            if(media.Path.EndsWith(".mp4") || media.Path.EndsWith(".avi"))
+            {
+                asModel.Video = media;
+            }
+            if(media.Path.EndsWith(".jpeg") || media.Path.EndsWith(".png"))
+            {
+                asModel.Image = media;
+            }
+            else
+            {
+                toastService.ShowToast(ToastLevel.Success, "Video must be .avi or .mp4 format. Picture myst be .jpeg or .png format");
+            }
+        }
+        else
+        {
+            
+        }
+    }
+
+    void OpenModal()
+    {
+      showModal = true;
+      StateHasChanged();
+    }
+
+    void CloseModal()
+    {
+      showModal = false;
+      StateHasChanged();
+    }
+  
+  string GetMedia(string id)
+  {
+    string path = this.mediaList.FirstOrDefault(x => x.Id == id).Path;
+
+    return path;
+  }
+}    
